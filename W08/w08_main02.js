@@ -85,9 +85,11 @@ function main()
         var S0 = scalars[ id[0] ];
         var S1 = scalars[ id[1] ];
         var S2 = scalars[ id[2] ];
-        S1 = parseInt(255 * (S1 - S0) / (S2 - S0));
-        S0 = 0;
-        S2 = 255;
+        var min = Math.min(S0, S1, S2);
+        var max = Math.max(S0, S1, S2);
+        S0 = parseInt(255 * (S0 - min) / (max - min));
+        S1 = parseInt(255 * (S1 - min) / (max - min));
+        S2= parseInt(255 * (S2 - min) / (max - min));
         var C0 = new THREE.Color().setHex( cmap[ S0 ][1] );
         var C1 = new THREE.Color().setHex( cmap[ S1 ][1] );
         var C2 = new THREE.Color().setHex( cmap[ S2 ][1] );
