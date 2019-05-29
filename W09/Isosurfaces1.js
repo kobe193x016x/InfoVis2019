@@ -13,14 +13,7 @@ function Isosurfaces( volume, isovalue )
     }
 
     var geometry = new THREE.Geometry();
-    var material = new THREE.ShaderMaterial({
-        vertexColors: THREE.VertexColors,
-        vertexShader: document.getElementById('gouraud.vert').text,
-        fragmentShader: document.getElementById('gouraud.frag').text,
-        uniforms: {
-        light_position: { type: 'v3', value: light.position }
-        }
-    });
+    var material = new THREE.MeshLambertMaterial();
 
     var smin = volume.min_value;
     var smax = volume.max_value;
@@ -130,6 +123,10 @@ function Isosurfaces( volume, isovalue )
 
     function interpolated_vertex( v0, v1, s )
     {
-        return new THREE.Vector3().addVectors( v0, v1 );
+      var index = [ (v0.z * volume.resolution.x * volume.resolution.y + v0.y * volume.resolution.x + v0.x),
+                   (v1.z * volume.resolution.x * volume.resolution.y + v1.y * volume.resolution.x + v1.x) ];
+      var t = (s - volume.values[ index[0] ][0]) /
+      (volume.values[ index[1] ][0] - volume.values[ index[0] ][0]);
+      return new THREE.Vector3().addVectors( v0.multiplyScalar(1-t), v1.multiplyScalar(t));
     }
 }
